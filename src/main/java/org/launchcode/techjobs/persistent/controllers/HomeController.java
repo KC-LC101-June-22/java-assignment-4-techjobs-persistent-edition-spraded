@@ -1,5 +1,6 @@
 package org.launchcode.techjobs.persistent.controllers;
 
+import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
 import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by LaunchCode
@@ -32,6 +34,7 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "My Jobs");
+        model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
@@ -53,15 +56,24 @@ public class HomeController {
             model.addAttribute("title", "Add Job");
             return "add";
         }
+        Optional<Employer> employerObj = employerRepository.findById(employerId);
+        if (employerObj.isPresent()){
+            newJob.setEmployer(employerObj.get());
+        }
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
         newJob.setSkills(skillObjs);
+        System.out.println(newJob.getEmployer() + "here");
+        System.out.println(newJob.getSkills());
         jobRepository.save(newJob);
         return "redirect:";
     }
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
-
+        Optional<Job> jobObj = jobRepository.findById(jobId);
+        Job job = jobObj.get();
+        model.addAttribute("job", job);
+        model.addAttribute("skills", job.getSkills());
         return "view";
     }
 

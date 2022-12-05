@@ -1,6 +1,7 @@
 package org.launchcode.techjobs.persistent.models;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -15,7 +16,7 @@ public class Skill extends AbstractEntity {
     private List<Job> jobs = new ArrayList<>();
 
     @NotBlank(message = "Description is required")
-    @Size(min = 15, max = 1500, message = "Description must be between 15 and 1500 characters")
+    @Size(min = 5, max = 1500, message = "Description must be between 15 and 1500 characters")
     private String description;
 
     public String getDescription() {
@@ -30,7 +31,4 @@ public class Skill extends AbstractEntity {
         return jobs;
     }
 
-    public void setJobs(List<Job> jobs) {
-        this.jobs = jobs;
-    }
 }
